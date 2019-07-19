@@ -1,0 +1,18 @@
+{
+    "name": "wula/booky",
+    "type": "wula-extension",
+    "require": {
+        "wula/wula-installer": "^2.0",
+        "michelf/php-markdown": "^1.8"
+    },
+    "suggest": {
+        "scws": "for fulltext search"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "windywany",
+            "email": "windywany@163.com"
+        }
+    ]
+}
