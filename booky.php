@@ -8,14 +8,14 @@
  * file that was distributed with this source code.
  */
 
-namespace booky;
+namespace wula\booky;
 
+use wula\booky\cmd\BookyCommand;
 use wulaphp\app\App;
 use wulaphp\router\Router;
 
 define('BOOKY_DIR', App::cfg('dir@booky', 'doc'));
-define('BOOKY_THEME', App::cfg('theme@booky', 'default'));
-define('BOOKY_ROOT', APPROOT . DS . BOOKY_DIR . DS);
+define('BOOKY_ROOT', APPROOT . BOOKY_DIR . DS);
 
 bind('allowed_res_dirs', function ($dirs) {
     $dirs[] = BOOKY_DIR;
@@ -25,4 +25,10 @@ bind('allowed_res_dirs', function ($dirs) {
 
 bind('router\registerDispatcher', function (Router $router) {
     $router->register(new URLDispatcher(), 500);
+});
+
+bind('artisan\getCommands', function ($cmds) {
+    $cmds['booky'] = new BookyCommand();
+
+    return $cmds;
 });

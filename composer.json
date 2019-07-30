@@ -2,6 +2,7 @@
     "name": "wula/booky",
     "type": "wula-extension",
     "require": {
+        "ext-yaml": "*",
         "wula/wula-installer": "^2.0",
         "michelf/php-markdown": "^1.8"
     },
