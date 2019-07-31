@@ -70,7 +70,7 @@ class IndexCommand extends ArtisanCommand {
         $atime   = time();
         $path    = APPROOT . BOOKY_DIR;
         $objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(BOOKY_ROOT), RecursiveIteratorIterator::SELF_FIRST);
-        $stmt    = $pdo->prepare('INSERT INTO filelist (file,atime,mtime) VALUES (:f,:a,:m) ON CONFLICT(file) DO UPDATE SET mtime1=mtime,atime=:a,mtime=:m');
+        $stmt    = $pdo->prepare('INSERT INTO filelist (file,atime,mtime) VALUES (:f,:a,:m)');
         foreach ($objects as $name => $object) {
             $name = str_replace($path . '/', '', $name);
             $ext  = strtolower($object->getExtension());
