@@ -20,24 +20,37 @@ class MarkdownPlugin implements Plugin {
             array_pop($curls);
         }
         $parser = new Parser();
-        $base   = trailingslashit($datas['config']->get('base', '')) . implode('/', $curls) . '/';
+        $base   = trailingslashit($datas['config']->get('base', ''));
+
+        if ($curls) {
+            $dir = implode('/', $curls) . '/';
+        } else {
+            $dir = '';
+        }
+
         # 转换URL
-        $parser->url_filter_func = function ($url) use ($base) {
+        $parser->url_filter_func = function ($url) use ($base, $dir) {
             if ($url{0} == '#') {
                 return $url{0} . urlencode(substr($url, 1));
             } else if ($url{0} == '/' || preg_match('#^(ht|f)tps?://.+#', $url)) {
                 return $url;
             }
-            if (preg_match('#^.*\.\./index\.md$#', $url)) {
-                return $base . str_replace('index.md', '', $url);
+            if (preg_match('#^.+\.md$#i', $url)) {
+                if (preg_match('#^.*\.\./index\.md$#i', $url)) {
+                    return $base . $dir . str_ireplace('index.md', '', $url);
+                } else {
+                    return rtrim($base . $dir . str_ireplace(['index.md', '.md'], ['', '.html'], $url), '/');
+                }
             } else {
-                return rtrim($base . str_replace(['index.md', '.md'], ['', '.html'], $url), '/');
+                return $base . BOOKY_DIR . '/' . $dir . $url;
             }
         };
+
         # 添加header id
         $parser->header_id_func = function ($header) {
             return urlencode(preg_replace('/(\s+|,+)/', '-', $header));
         };
+
         # 代码段
         $parser->code_attr_on_pre        = false;
         $parser->code_block_content_func = function ($code, $lang) use ($datas) {

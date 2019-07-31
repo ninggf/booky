@@ -3,8 +3,10 @@
     "type": "wula-extension",
     "require": {
         "ext-yaml": "*",
+        "ext-pdo_sqlite": "*",
         "wula/wula-installer": "^2.0",
-        "michelf/php-markdown": "^1.8"
+        "michelf/php-markdown": "^1.8",
+        "teamtnt/tntsearch": "^2.1"
     },
     "suggest": {
         "scws": "for fulltext search"

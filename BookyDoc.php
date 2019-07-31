@@ -68,7 +68,10 @@ class BookyDoc {
             'file'       => $this->file,
             'sourceFile' => str_replace([APPROOT, DS], ['', '/'], $this->file),
             'config'     => $this->opts,
-            'page'       => []
+            'page'       => [
+                'create_time' => @filectime($this->file),
+                'update_time' => @filemtime($this->file)
+            ]
         ];
         # 内置插件
         array_unshift($this->plugins, new SummaryPlugin());# 目录
@@ -126,8 +129,19 @@ class BookyDoc {
      * @return string
      */
     public static function getURL($file) {
-        $url = str_replace([BOOKY_ROOT, DS, 'index.md', '.md'], ['', '/', '', '.html'], $file);
+        static $base = null;
+        if ($base == null) {
+            $base = trailingslashit(App::cfg('base@booky'));
+        }
 
-        return rtrim($url, '/');
+        if (preg_match('#^.+\.md$#i', $file)) {
+            $url = str_replace([BOOKY_ROOT, DS, 'index.md', '.md'], ['', '/', '', '.html'], $file);
+        } else {
+            $url = BOOKY_DIR . '/' . $file;
+        }
+
+        $url = rtrim($base . $url, '/');
+
+        return $url ? $url : '/';
     }
 }
