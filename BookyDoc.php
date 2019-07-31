@@ -95,8 +95,8 @@ class BookyDoc {
             }, 1000, 0);
         }
 
-        if (isset($datas['layout']) && $datas['layout']) {
-            $layout = $datas['layout'] . '.tpl';
+        if (isset($datas['page']['layout']) && $datas['page']['layout']) {
+            $layout = $datas['page']['layout'] . '.tpl';
         } else if ($this->url == 'index.html' || ($langDefined == $this->url)) {
             $layout = 'index.tpl';
         } else {
