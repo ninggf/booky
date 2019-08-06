@@ -73,6 +73,11 @@ class BookyDoc {
                 'update_time' => @filemtime($this->file)
             ]
         ];
+        if ($this->plugins) {
+            foreach ($this->plugins as $k => $p) {
+                $this->plugins[ $k ] = new $p();
+            }
+        }
         # 内置插件
         array_unshift($this->plugins, new SummaryPlugin());# 目录
         array_unshift($this->plugins, new YamlPlugin()); # yaml 变量
