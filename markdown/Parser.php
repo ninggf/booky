@@ -120,4 +120,34 @@ class Parser extends MarkdownExtra {
 
         return "\n" . $result . "\n\n";
     }
+
+    /**
+     * List item parsing callback
+     *
+     * @param array $matches
+     *
+     * @return string
+     */
+    protected function _processListItems_callback($matches) {
+        $item               = $matches[4];
+        $leading_line       =& $matches[1];
+        $leading_space      =& $matches[2];
+        $marker_space       = $matches[3];
+        $tailing_blank_line =& $matches[5];
+
+        if ($leading_line || $tailing_blank_line || preg_match('/\n{2,}/', $item)) {
+            // Replace marker with the appropriate whitespace indentation
+            $item = $leading_space . str_repeat(' ', strlen($marker_space)) . $item;
+            $item = $this->runBlockGamut($this->outdent($item) . "\n");
+        } else {
+            // Recursion for sub-lists:
+            $item = $this->doLists($this->outdent($item));
+            $item = $this->formParagraphs($item, false);
+        }
+        if (strpos($item, '{$curl$}') !== false) {
+            return "<li class=\"active\">" . $item . "</li>\n";
+        } else {
+            return "<li>" . $item . "</li>\n";
+        }
+    }
 }
