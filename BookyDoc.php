@@ -12,6 +12,7 @@ namespace wula\booky;
 
 use wula\booky\plugin\MarkdownPlugin;
 use wula\booky\plugin\SummaryPlugin;
+use wula\booky\plugin\VideoPlugin;
 use wula\booky\plugin\YamlPlugin;
 use wulaphp\app\App;
 use wulaphp\router\Router;
@@ -81,6 +82,7 @@ class BookyDoc {
         # 内置插件
         array_unshift($this->plugins, new SummaryPlugin());# 目录
         array_unshift($this->plugins, new YamlPlugin()); # yaml 变量
+        array_unshift($this->plugins, new VideoPlugin()); # 视频
         array_push($this->plugins, new MarkdownPlugin()); # markdown 解析
         # 应用插件
         foreach ($this->plugins as $plugin) {
