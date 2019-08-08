@@ -59,9 +59,11 @@ class MarkdownPlugin implements Plugin {
                 $code  = <<<HTML
 </code></pre><div class="demo-wraper">
 <div class="demo">$code</div>
-<div class="code">$codes</div>
-</div><pre><code>
+<div class="code"><pre><code class="html">$codes</code></pre></div>
+</div><pre><code class="html">
 HTML;
+            } else {
+                $code = htmlentities($code);
             }
 
             return $code;

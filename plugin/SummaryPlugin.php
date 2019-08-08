@@ -16,8 +16,9 @@ class SummaryPlugin implements Plugin {
     private $parser;
     private $base;
     private $curl;
+    private $conf = ['l1cls' => '', 'l2cls' => '', 'l3cls' => '', 'acls' => '', 'ccls' => 'active'];
 
-    public function __construct() {
+    public function __construct(array $conf = null) {
         $this->parser                  = new Parser();
         $this->parser->add_list_cls    = true;
         $this->parser->url_filter_func = function ($url) {
@@ -33,6 +34,10 @@ class SummaryPlugin implements Plugin {
 
             return $url;
         };
+
+        if ($conf) {
+            $this->conf = array_merge($this->conf, $conf);
+        }
     }
 
     public function parseMarkdown($content, array &$datas) {
@@ -54,7 +59,35 @@ class SummaryPlugin implements Plugin {
 
             $toc = $parser->transform(file_get_contents($summary));
             $this->parseNP($toc, $datas);
-            $datas['summary'] = str_replace('{$curl$}', $curl . '" class="active', $toc);
+            $acls    = $this->conf['acls'];
+            $ccls    = $this->conf['ccls'];
+            $summary = str_replace('{$curl$}', $curl . '" class="' . $acls . ' ' . $ccls, $toc);
+            $s       = [];
+            $r       = [];
+            if ($this->conf['l1cls']) {
+                $s[] = 'navi-ul-1';
+                $r[] = $this->conf['l1cls'];
+            }
+            if ($this->conf['l2cls']) {
+                $s[] = 'navi-ul-2';
+                $r[] = $this->conf['l2cls'];
+            }
+            if ($this->conf['l3cls']) {
+                $s[] = 'navi-ul-3';
+                $r[] = $this->conf['l3cls'];
+            }
+
+            $summary = str_replace($s, $r, $summary);
+            if ($acls) {
+                $summary = preg_replace_callback('#<a\shref="[^>]+>#', function ($ms) use ($acls) {
+                    if (strpos($ms[0], 'class="')) {
+                        return $ms[0];
+                    } else {
+                        return str_replace('href="', 'class="' . $acls . '" href="', $ms[0]);
+                    }
+                }, $summary);
+            }
+            $datas['summary'] = $summary;
         }
 
         return $content;

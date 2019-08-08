@@ -80,7 +80,8 @@ class BookyDoc {
             }
         }
         # 内置插件
-        array_unshift($this->plugins, new SummaryPlugin());# 目录
+        $scf = $this->opts->geta('summary');
+        array_unshift($this->plugins, new SummaryPlugin($scf));# 目录
         array_unshift($this->plugins, new YamlPlugin()); # yaml 变量
         array_unshift($this->plugins, new VideoPlugin()); # 视频
         array_push($this->plugins, new MarkdownPlugin()); # markdown 解析
