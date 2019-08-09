@@ -15,11 +15,14 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use TeamTNT\TNTSearch\Exceptions\IndexNotFoundException;
 use TeamTNT\TNTSearch\TNTSearch;
+use wula\booky\markdown\Parser;
 use wula\booky\plugin\YamlPlugin;
 use wula\booky\search\Indexer;
 use wulaphp\artisan\ArtisanCommand;
 
 class IndexCommand extends ArtisanCommand {
+    private $headers;
+
     public function cmd() {
         return 'index';
     }
@@ -88,7 +91,15 @@ class IndexCommand extends ArtisanCommand {
         $result = $pdo->query('SELECT id,file FROM filelist');
         if ($result) {
             $yamlPlugin = new YamlPlugin();
-            $counter    = 0;
+            $parser     = new Parser();
+            # 添加header id
+            $parser->header_id_func = function ($header) {
+                $this->headers[] = $header;
+
+                return '';
+            };
+
+            $counter = 0;
             $pdo->beginTransaction();
             $stmt = $pdo->prepare('update filelist set title=:t where id=:id');
             while (($row = $result->fetch(PDO::FETCH_ASSOC))) {
@@ -106,6 +117,8 @@ class IndexCommand extends ArtisanCommand {
                         $counter++;
                     } else {
                         $counter++;
+                        $this->headers = [];
+                        $parser->transform($content);
                         $doc       = [];
                         $doc['id'] = $id;
                         if ($datas['page']['title']) {
@@ -114,7 +127,8 @@ class IndexCommand extends ArtisanCommand {
                             $stmt->bindValue(':id', $id);
                             $stmt->execute();
                         }
-                        $doc['article'] = $datas['page']['index'];
+
+                        $doc['article'] = trim($datas['page']['index'], '1') . ' ' . implode(' ', $this->headers);
                         $indexer->insert($doc);
                     }
                 }

@@ -33,6 +33,7 @@
 return [
   'dir'      => 'doc',
   'theme'    => 'wula',
+  'summary'  => ['l1cls' => '', 'l2cls' => '', 'acls' => '', 'ccls' => ''],
   'theme_en' => 'wen',
   'plugins'  => [],
   'langs'    => ['default' => '中文', 'en' => '英文'],  
@@ -44,6 +45,12 @@ return [
 3. `theme_en`: 语言`en`的模板主题
 4. `plugins`: 可以配置自己的插件.
     * 插件的全类名
+5. `summary` : 配置导航菜单ul,a标签类
+    * `l1cls`: 第一级导航ul标签类
+    * `l2cls`: 第二级导航ul标签类
+    * `l3cls`: 第三级导航ul标签类
+    * `acls`: `A`标签类
+    * `ccls`: 当前`A`标签类
 
 其它配置，请根据需要自行添加，模板中通过`$config`变量引用.
 
