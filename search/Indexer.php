@@ -24,6 +24,7 @@ class Indexer extends TNTIndexer {
                     id INTEGER PRIMARY KEY,
                     file VARCHAR(64) NOT NULL,
                     title TEXT,
+                    cate  TEXT,
                     idx   INTEGER DEFAULT 0,  
                     atime INTEGER DEFAULT 0,
                     mtime INTEGER DEFAULT 0,

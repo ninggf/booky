@@ -101,7 +101,7 @@ class IndexCommand extends ArtisanCommand {
 
             $counter = 0;
             $pdo->beginTransaction();
-            $stmt = $pdo->prepare('update filelist set title=:t where id=:id');
+            $stmt = $pdo->prepare('update filelist set title=:t,cate=:c where id=:id');
             while (($row = $result->fetch(PDO::FETCH_ASSOC))) {
                 $datas   = [];
                 $id      = $row['id'];
@@ -123,6 +123,7 @@ class IndexCommand extends ArtisanCommand {
                         $doc['id'] = $id;
                         if ($datas['page']['title']) {
                             $doc['title'] = $datas['page']['title'];
+                            $stmt->bindValue(':c', $datas['page']['cate']);
                             $stmt->bindValue(':t', $doc['title']);
                             $stmt->bindValue(':id', $id);
                             $stmt->execute();

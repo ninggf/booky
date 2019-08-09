@@ -31,12 +31,16 @@ class URLDispatcher implements IURLDispatcher {
                     $ids       = $rest['ids'];
                     unset($rest['ids']);
                     if ($ids) {
-                        $rows = $pdo->query('select id,file,title from filelist where id in (' . implode(',', $ids) . ')');
+                        $rows = $pdo->query('select id,file,title,cate from filelist where id in (' . implode(',', $ids) . ')');
                         if ($rows) {
                             $_pages = [];
                             while (($row = $rows->fetch(\PDO::FETCH_ASSOC))) {
                                 $url                  = BookyDoc::getURL($row['file']);
-                                $_pages[ $row['id'] ] = ['url' => $url, 'title' => $row['title']];
+                                $_pages[ $row['id'] ] = [
+                                    'url'   => $url,
+                                    'title' => $row['title'],
+                                    'cate'  => $row['cate']
+                                ];
                             }
                             $pages = [];
                             foreach ($ids as $id) {
