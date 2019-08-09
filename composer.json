@@ -1,12 +1,12 @@
 {
     "name": "wula/booky",
     "type": "wula-extension",
+    "description": "基于wulaphp的文档生成器",
     "require": {
         "ext-yaml": "*",
         "ext-pdo_sqlite": "*",
         "wula/wula-installer": "^2.0",
-        "michelf/php-markdown": "^1.8",
-        "teamtnt/tntsearch": "^2.1"
+        "michelf/php-markdown": "^1.8"
     },
     "suggest": {
         "scws": "for fulltext search"
