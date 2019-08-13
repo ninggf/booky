@@ -47,10 +47,13 @@ class Parser extends MarkdownExtra {
      */
     protected function _doHeaders_callback_atx($matches) {
         $level = intval(strlen($matches[1]));
-
-        $defaultId = is_callable($this->header_id_func) ? call_user_func($this->header_id_func, $matches[2]) : null;
-        $attr      = $this->doExtraAttributes("h$level", $dummy =& $matches[3], $defaultId);
-        $block     = "<h$level$attr>" . $this->runSpanGamut($matches[2]) . "</h$level>";
+        if (isset($matches[3]) && preg_match('/#([a-z][-_a-zA-Z0-9]+)/', $matches[3], $ms)) {
+            $defaultId = $ms[1];
+        } else {
+            $defaultId = is_callable($this->header_id_func) ? call_user_func($this->header_id_func, $matches[2]) : null;
+        }
+        $attr  = $this->doExtraAttributes("h$level", $dummy =& $matches[3], $defaultId);
+        $block = "<h$level$attr>" . $this->runSpanGamut($matches[2]) . "</h$level>";
         # 添加toc
         $this->tocs = $this->tocs->add($matches[2], $level, ['id' => $defaultId]);
 
@@ -69,10 +72,14 @@ class Parser extends MarkdownExtra {
             return $matches[0];
         }
 
-        $level     = $matches[3]{0} == '=' ? 1 : 2;
-        $defaultId = is_callable($this->header_id_func) ? call_user_func($this->header_id_func, $matches[1]) : null;
-        $attr      = $this->doExtraAttributes("h$level", $dummy =& $matches[2], $defaultId);
-        $block     = "<h$level$attr>" . $this->runSpanGamut($matches[1]) . "</h$level>";
+        $level = $matches[3]{0} == '=' ? 1 : 2;
+        if (isset($matches[2]) && preg_match('/#([a-z][-_a-zA-Z0-9]+)/', $matches[2], $ms)) {
+            $defaultId = $ms[1];
+        } else {
+            $defaultId = is_callable($this->header_id_func) ? call_user_func($this->header_id_func, $matches[1]) : null;
+        }
+        $attr  = $this->doExtraAttributes("h$level", $dummy =& $matches[2], $defaultId);
+        $block = "<h$level$attr>" . $this->runSpanGamut($matches[1]) . "</h$level>";
         # 添加toc
         $this->tocs = $this->tocs->add($matches[2], $level, ['id' => $defaultId]);
 

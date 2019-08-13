@@ -71,6 +71,7 @@ HTML;
         $content                         = $parser->transform($content);
         $datas['page']['toc']            = $parser->toc();
         $datas['page']['tocStr']         = $parser->toc()->render();
+        $content                         = str_replace('{$toc}', $datas['page']['tocStr'], $content);
         if (isset($datas['page']['demo']) && $datas['page']['demo']) {
             return str_replace('<pre><code class="html"></code></pre>', '', $content);
         } else {
