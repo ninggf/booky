@@ -35,8 +35,8 @@ class MarkdownPlugin implements Plugin {
             } else if ($url{0} == '/' || preg_match('#^(ht|f)tps?://.+#', $url)) {
                 return $url;
             }
-            if (preg_match('#^.+\.md$#i', $url)) {
-                if (preg_match('#^.*\.\./index\.md$#i', $url)) {
+            if (preg_match('/^.+\.md(#.+)?$/i', $url)) {
+                if (preg_match('@^.*\.\./index\.md(#.+)?$@i', $url)) {
                     return $base . $dir . str_ireplace('index.md', '', $url);
                 } else {
                     return rtrim($base . $dir . str_ireplace(['index.md', '.md'], ['', '.html'], $url), '/');
