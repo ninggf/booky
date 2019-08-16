@@ -105,18 +105,19 @@ class SummaryPlugin implements Plugin {
      */
     private function parseNP($toc, &$datas) {
         # 找到当前页URL所在位置
-        $cpos = mb_strpos($toc, '{$curl$}');
+        $cpos = strpos($toc, '{$curl$}');
         if (!$cpos) {
             return;
         }
         #找下一个URL
-        $napos1 = mb_strpos($toc, '<a', $cpos);
-        if ($napos1 && preg_match('#<a href="([^"]+)"[^>]*>(.+?)</a>#', $toc, $ms, 0, $napos1)) {
+        $napos1 = strpos($toc, '<a', $cpos);
+        if ($napos1 && preg_match('#<a href="([^"]+)"[^>]*>(.+?)</a>#u', $toc, $ms, 0, $napos1)) {
             $datas['nextPage'] = ['url' => $ms[1], 'name' => $ms[2]];
         }
         #找上一个URL
-        $papos1 = mb_strrpos($toc, '<a', $cpos - mb_strlen($toc) - 10);
-        if ($papos1 && preg_match('#<a href="([^"]+)"[^>]*>(.+?)</a>#', $toc, $ms, 0, $papos1)) {
+        $ptoc   = substr($toc, 0, $cpos - 28);
+        $papos1 = strrpos($ptoc, '<a');
+        if ($papos1 && preg_match('#<a href="([^"]+)"[^>]*>(.+?)</a>#u', $ptoc, $ms, 0, $papos1)) {
             $datas['prevPage'] = ['url' => $ms[1], 'name' => $ms[2]];
         }
     }
