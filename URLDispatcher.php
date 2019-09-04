@@ -12,10 +12,12 @@ namespace wula\booky;
 
 use wula\booky\cmd\IndexCommand;
 use wulaphp\router\IURLDispatcher;
+use wulaphp\router\Router;
+use wulaphp\router\UrlParsedInfo;
 
 class URLDispatcher implements IURLDispatcher {
 
-    public function dispatch($url, $router, $parsedInfo) {
+    public function dispatch(string $url, Router $router, UrlParsedInfo $parsedInfo) {
         if (preg_match('/_summary.html$/', $url)) {#不处理_开头的URL
             return null;
         }
